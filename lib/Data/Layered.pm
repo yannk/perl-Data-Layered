@@ -4,7 +4,7 @@ use strict;
 use 5.008_001;
 our $VERSION = '0.01';
 use Exporter;
-use vars '@EXPORT_OK';
+use vars qw(@ISA @EXPORT_OK);
 
 @ISA = qw(Exporter);
 @EXPORT_OK = qw(layered_get);
@@ -66,6 +66,12 @@ list of keys (a subset of C<$keys>) and returning a reference to a list of
 results.
 
 C<$miss_value> defines the B<miss> value that all layers understand.
+
+=cut
+
+sub layered_get {
+    return [];
+}
 
 =head1 AUTHOR
 
