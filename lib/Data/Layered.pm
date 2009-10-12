@@ -3,6 +3,11 @@ package Data::Layered;
 use strict;
 use 5.008_001;
 our $VERSION = '0.01';
+use Exporter;
+use vars '@EXPORT_OK';
+
+@ISA = qw(Exporter);
+@EXPORT_OK = qw(layered_get);
 
 =encoding utf-8
 
@@ -42,10 +47,25 @@ use case is to retrieve data from:
 
 =item * canonical datastore
 
-=cut
+=back
 
 though, there is no assumption made by this module about the type
 of these stores, their topography or their response time.
+
+=head1 METHODS
+
+There is only one method that you can import into your package.
+
+=head2 layered_get($keys, $layers, $miss_value)
+
+Return a reference to a list of results (in the same order that the C<$keys>),
+corresponding to the list of keys passed in the C<$keys> array ref.
+
+C<$layers> is a list reference of code references taking in parameter a
+list of keys (a subset of C<$keys>) and returning a reference to a list of
+results.
+
+C<$miss_value> defines the B<miss> value that all layers understand.
 
 =head1 AUTHOR
 
