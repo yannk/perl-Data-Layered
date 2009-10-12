@@ -70,7 +70,41 @@ C<$miss_value> defines the B<miss> value that all layers understand.
 =cut
 
 sub layered_get {
-    return [];
+    my ($class) = @_;
+    shift() unless ref $class;
+    my ($keys, $layers, $miss_value) = @_;
+
+    ## degenerated cases
+    return []    unless $keys;
+    return $keys unless $layers;
+
+    my @results    = ($miss_value) x scalar @$keys;
+    my @input_map  = \(@$keys  );
+    my @output_map = \(@results);
+
+    for my $layer (@$layers) {
+        my $got = $layer->([ map { $$_ } @input_map ]);
+        my (@new_input_map, @new_output_map);
+        for (my $i = 0; $i < scalar @$got; $i++) {
+            my $res = $got->[$i];
+            if (    $miss_value && $miss_value eq $res
+                 or !defined $miss_value && !defined $res ) {
+
+                ## miss case
+                push @new_input_map, $input_map[$i];
+                push @new_output_map, $output_map[$i];
+            }
+            else {
+                ## hit case
+                ${ $output_map[$i] } = $res;
+            }
+        }
+        last unless scalar @new_output_map;
+        @input_map  = @new_input_map;
+        @output_map = @new_output_map;
+    }
+
+    return \@results;
 }
 
 =head1 AUTHOR
