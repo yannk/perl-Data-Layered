@@ -58,10 +58,11 @@ There is only one method that you can import into your package.
 
 =head2 layered_get($keys, $layers, $miss_value)
 
-Return a reference to a list of results (in the same order that the C<$keys>),
-corresponding to the list of keys passed in the C<$keys> array ref.
+Return a reference to a list of results, corresponding to the list of keys
+passed in the C<$keys> array ref. Results are returned in the same order
+than C<$keys>.
 
-C<$layers> is a list reference of code references taking in parameter a
+C<$layers> is a arrayref of code references taking in parameter a
 list of keys (a subset of C<$keys>) and returning a reference to a list of
 results.
 
@@ -115,8 +116,6 @@ Yann Kerherve E<lt>yannk@cpan.orgE<gt>
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
-
-=head1 SEE ALSO
 
 =cut
 
