@@ -50,5 +50,3 @@ $L2->{b} = 'got it';
 $r = layered_get($keys, [ $l1, $l2 ]);
 is_deeply $r, [ '1', '1', '1', 'got it', '2', '3', undef ],
           "explicit miss from layer(with undef)";
-
-## what if a miss value is passed in the first place?
