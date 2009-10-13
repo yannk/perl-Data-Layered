@@ -7,7 +7,7 @@ use Exporter;
 use vars qw(@ISA @EXPORT_OK);
 
 @ISA = qw(Exporter);
-@EXPORT_OK = qw(layered_get);
+@EXPORT_OK = qw(layered_get layered_get2 layered_get3);
 
 =encoding utf-8
 
@@ -107,6 +107,35 @@ sub layered_get {
     }
 
     return \@results;
+}
+
+sub layered_get2 {
+    my ($class) = @_;
+    shift() unless ref $class;
+    my ($keys, $layers) = @_;
+
+    ## degenerated cases
+    return {} unless $keys;
+    return $keys unless $layers;
+
+    my %results   = ();
+    my @need_keys = @$keys;
+
+    for my $layer (@$layers) {
+        $layer->(\@need_keys, \%results);
+
+        # keys which have been resolved will have a key in %results
+        # the rest will need to be attempted at the next layer
+        @need_keys = grep { ! exists $results{$_} } @need_keys;
+    }
+
+    return \%results;
+}
+
+sub layered_get3 {
+    my $keys = $_[0];
+    my $res = layered_get2(@_);
+    return [ map { $res->{$_} } @$keys ];
 }
 
 =head1 AUTHOR
