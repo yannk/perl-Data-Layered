@@ -84,7 +84,7 @@ sub layered_get {
     my @output_map = \(@results);
 
     for my $layer (@$layers) {
-        my $got = $layer->([ map { $$_ } @input_map ]);
+        my $got = $layer->([ map { $$_ } @input_map ], \@output_map);
         my (@new_input_map, @new_output_map);
         for (my $i = 0; $i < scalar @$got; $i++) {
             my $res = $got->[$i];

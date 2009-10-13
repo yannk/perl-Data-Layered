@@ -1,7 +1,7 @@
 use Find::Lib '../lib';
 use strict;
 use warnings;
-use Test::More tests => 10;
+use Test::More tests => 12;
 
 use_ok 'Data::Layered';
 use Data::Layered 'layered_get';
@@ -50,3 +50,22 @@ $L2->{b} = 'got it';
 $r = layered_get($keys, [ $l1, $l2 ]);
 is_deeply $r, [ '1', '1', '1', 'got it', '2', '3', undef ],
           "explicit miss from layer(with undef)";
+
+my @misses = ();
+$l1 = sub {
+    my $in = $_[0];
+    my $out = $_[1];
+    my $res = [ @$L1{ @$in } ];
+    for (my $i = 0; $i< @$res; $i++) {
+        if (! defined $res->[$i]) {
+            push @misses, [ $in->[$i], $out->[$i] ];
+        }
+    }
+    return $res;
+};
+
+$r = layered_get($keys, [ $l1, $l2 ]);
+is_deeply [ map { $_->[0] } @misses ], [qw/ A b B C /], "miss keys recorded";
+is_deeply [ map { defined $_ ? ${$_->[1]} : $_ } @misses ],
+          [ '1', 'got it', '2', undef ],
+          "The actual values are now populated";
