@@ -86,8 +86,8 @@ sub layered_get {
     for my $layer (@$layers) {
         my $got = $layer->([ map { $$_ } @input_map ], \@output_map);
         my (@new_input_map, @new_output_map);
-        for (my $i = 0; $i < scalar @$got; $i++) {
-            my $res = $got->[$i];
+        my $i = 0;
+        foreach my $res (@$got) {
             if (    $miss_value && $miss_value eq $res
                  or !defined $miss_value && !defined $res ) {
 
@@ -99,6 +99,7 @@ sub layered_get {
                 ## hit case
                 ${ $output_map[$i] } = $res;
             }
+            $i++;
         }
         last unless scalar @new_output_map;
         @input_map  = @new_input_map;
