@@ -14,6 +14,15 @@ use vars qw(@ISA @EXPORT_OK);
 =head1 NAME
 
 Data::Layered - Access data using layered data store (typically caches)
+Comparison of 2 different algorithms
+
+=head1 DESCRIPTION
+
+The benefits of using references is clearly not enough to worth the code
+complexity - or the cost of this module. Clearly, using a classical hash
+result is probably what you want.
+
+So in a word: Don't use this module :P
 
 =head1 SYNOPSIS
 
